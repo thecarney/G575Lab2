@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>D3Lab</title>
+
+    <!-- Font Awesome 4 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome 5 -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+    <!--bootstrap 4-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
+    <!--my css-->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<header>
+    <nav	class="navbar bg-dark navbar-dark navbar-expand-sm mb-0 fixed-top z-depth-1 ">
+        <div class="container ">
+            <a class="navbar-brand animated zoom" href="http://thecarney.github.io"><img class="figure-img mb-0 mr-0 " src="img/logo_white_minimal.svg" alt="logo " width="30px "/></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myTogglerNav"><span class="navbar-toggler-icon"></span></button>
+
+            <div class="collapse navbar-collapse text-right " id="myTogglerNav">
+                <div class="navbar-nav ml-auto ">
+                    <a class="nav-item nav-link " href="http://thecarney.github.io">Home</a>
+                    <a class="nav-item nav-link " href="http://thecarney.github.io/Projects.html">Projects</a>
+                    <a class="nav-item nav-link " href="http://thecarney.github.io/Resume.html">Resume</a>
+                    <a class="nav-item nav-link " href="http://thecarney.github.io/About.html">About</a>
+                    <a class="nav-item nav-link " href="http://thecarney.github.io/Contact.html">Contact</a>
+                </div><!-- navbar -->
+            </div><!-- collapse -->
+        </div><!-- container -->
+    </nav>
+</header>
+<!-- Navbar -->
+
+<!-- MAIN -->
+<main role="main ">
+
+    <!-- JUMBOTRON (NO LONGER USED)-->
+    <!--<section class="jumbotron jumbotron-fluid text-center bg-secondary animated slideInDown z-depth-1 mb-0" id="jumbotron" >-->
+        <!--<div class="container">-->
+            <!--<h1 class="jumbotron-heading mb-1 text-white">Alaska Flood History</h1>-->
+        <!--</div>-->
+    <!--</section>-->
+    <!-- JUMBOTRON -->
+
+
+    <!-- Splash Modal -->
+    <div class="modal fade" id="splashModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text" id="exampleModalLabel"><strong>Welcome to the Alaska Flood History Explorer</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This web application explores the quantity, severity, and decade of occurrence of recorded flood events
+                    in Alaskan communities. Each point on the map represents a community in Alaska.</p>
+                    The top level <strong>Severity Filter</strong> limits the data used in the other tools to those communities that have experienced floods of the specified severity.</p>
+                    The <strong>Floods by Decade</strong> tool sequences through the communities that had floods of the specified severity in each decade since 1900.</p>
+                    The <strong>Communities with __ Floods</strong> tool filters communities based on the number of floods of the specified severity in the database.</p>
+                    The <strong>Community Overview</strong> window describes a community whose point is clicked.
+                </div>
+                <div class="modal-footer flex-column align-content-center">
+                    <button type="button" class="btn btn-indigo btn-sm" data-dismiss="modal">Get Started!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MAP PAGE -->
+    <div class="container-fluid p-4 mb-3 mt-5 fadeIn" id="mainContainer">
+        <div class="row" id="rowParent">
+            <div class="col-lg-4 mb-2 mb-lg-0">
+
+                <!-- BUTTON FILTER CARD -->
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <div class="card-title h5">
+                            <span id="titleVariables">Show Floods of Severity:</span>
+                            <div class="h6 float-right" id="cardCommunitiesShown">Count: 192</div>
+                        </div>
+
+
+                        <button id="btnSevAll" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">All</button>
+                        <button id="btnSevMaj" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Major</button>
+                        <button id="btnSevMod" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Moderate</button>
+                        <button id="btnSecMin" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Minor</button>
+
+
+                    </div>
+                </div>
+
+                <!-- DECADE SLIDER CARD -->
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <div class="card-title h5 pb-4">
+                            <span id="titleDecade">Floods by Decade</span>
+                            <div class="form-group float-right top">
+                            <span class="switch switch-sm">
+                                <input type="checkbox" class="switch" id="toggleDecadeSlider">
+                                <label for="toggleDecadeSlider"></label>
+                            </span>
+                            </div>
+                        </div>
+                            <button class="myCustomSkipButton" id="lastDecade" ><i class="fa fa-backward" disabled="false"></i></button>
+                            <input id="decadeSlider" type="text" class="span2" value="" data-slider-min="1900" data-slider-max="2019" data-slider-step="10" data-slider-value="[1900,1909]"/>
+                            <button class="myCustomSkipButton" id="nextDecade" ><i class="fa fa-forward" disabled="false"></i></button>
+                            <div class="h6 float-right top" id="cardShowDecadeFloodCount">0 Floods</div>
+                    </div>
+                </div>
+
+                <!-- FLOOD COUNT SLIDER CARD -->
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <div class="card-title h5 pb-4">
+                            <span id="titleFilter">Communities with __ Floods</span>
+                            <div class="form-group float-right top">
+                            <span class="switch switch-sm">
+                                <input type="checkbox" class="switch" id="toggleFilterSlider">
+                                <label for="toggleFilterSlider"></label>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="pl-2">
+                            <input id="rangeFilter" type="text" class="span2" value="" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="[0,40]"/>
+                            <div class="h6 float-right top" id="cardShowRangeFilterCount">0 Communities</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMMUNITY DESCRIPTION CARD -->
+                <div class="card"  id="infoPanel">
+                    <div class="card-body">
+                        <div class="card-title h5">Community Overview</div>
+                        <div class="p-1" id="city">Click a community for more information.</div>
+                        <div class="p-1 blue-text" id="shed"></div>
+                        <div class="p-1 scroll-box" id="desc"></div>
+                        <div id="canvasHolder">
+                            <canvas id="barChart" class=""></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAP CARD -->
+            <div class="col-lg-8 mt-0 mt-lg-l">
+                <div class="card" id="mapCard">
+                    <div class="card-img rounded" id="map"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- MAP PAGE -->
+
+</main>
+<!-- MAIN -->
+
+<!-- FOOTER -->
+<footer class="navbar bg-dark navbar-dark navbar-expand-sm mb-0 box-shadow fixed-bottom">
+    <p class="navbar-nav ml-auto text-muted font-weight-light h6 "><small>© James Carney</small></p>
+</footer>
+<!-- FOOTER -->
+
+<!-- device size tester -->
+<div id="device-size-detector">
+    <div id="xs" class="d-block d-sm-none"></div>
+    <div id="sm" class="d-none d-sm-block d-md-none"></div>
+    <div id="md" class="d-none d-md-block d-lg-none"></div>
+    <div id="lg" class="d-none d-lg-block d-xl-none"></div>
+    <div id="xl" class="d-none d-xl-block"></div>
+</div>
+<!-- device size tester -->
+
+<!--Jquery-->
+<script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+<!--bootstap 4 scripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<!-- material design bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
+<!--my scripts-->
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
