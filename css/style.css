@@ -9,16 +9,40 @@ body{
     background-color: lightgray;
 }
 html, body {
-    height: 100%;
+
     width: 100%;
 }
 
-/*LEAFLET MAP*/
-#map {
-    height: 50vh;
+/*MAP*/
+
+#mainCardMap {
+    height: 80vh;
 }
+
+.map{
+    /*border: solid #999;*/
+}
+
 .leaflet-popup-content p {
     margin: 0.2em 0;
+}
+
+.blockGroups {
+    fill: #afafaf;
+    stroke: #404040;
+    stroke-width: 2px;
+}
+
+.california {
+    fill: #afafaf;
+    stroke: #404040;
+    stroke-width: 1px;
+}
+
+.frame {
+    fill: #af011f;
+    stroke: #af011f;
+    stroke-width: 10px;
 }
 
 /*TEMPORAL LEGEND*/

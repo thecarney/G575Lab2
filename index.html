@@ -42,16 +42,7 @@
 <!-- Navbar -->
 
 <!-- MAIN -->
-<main role="main ">
-
-    <!-- JUMBOTRON (NO LONGER USED)-->
-    <!--<section class="jumbotron jumbotron-fluid text-center bg-secondary animated slideInDown z-depth-1 mb-0" id="jumbotron" >-->
-        <!--<div class="container">-->
-            <!--<h1 class="jumbotron-heading mb-1 text-white">Alaska Flood History</h1>-->
-        <!--</div>-->
-    <!--</section>-->
-    <!-- JUMBOTRON -->
-
+<main role="main">
 
     <!-- Splash Modal -->
     <div class="modal fade" id="splashModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,86 +69,14 @@
         </div>
     </div>
 
-
     <!-- MAP PAGE -->
-    <div class="container-fluid p-4 mb-3 mt-5 fadeIn" id="mainContainer">
+    <div class="container p-4 mb-3 mt-5 fadeIn" id="mainContainer">
         <div class="row" id="rowParent">
-            <div class="col-lg-4 mb-2 mb-lg-0">
-
-                <!-- BUTTON FILTER CARD -->
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <div class="card-title h5">
-                            <span id="titleVariables">Show Floods of Severity:</span>
-                            <div class="h6 float-right" id="cardCommunitiesShown">Count: 192</div>
-                        </div>
-
-
-                        <button id="btnSevAll" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">All</button>
-                        <button id="btnSevMaj" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Major</button>
-                        <button id="btnSevMod" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Moderate</button>
-                        <button id="btnSecMin" type="button" class="btn btn-blue-grey btn-sm" data-toggle="button" aria-pressed="false">Minor</button>
-
-
-                    </div>
-                </div>
-
-                <!-- DECADE SLIDER CARD -->
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <div class="card-title h5 pb-4">
-                            <span id="titleDecade">Floods by Decade</span>
-                            <div class="form-group float-right top">
-                            <span class="switch switch-sm">
-                                <input type="checkbox" class="switch" id="toggleDecadeSlider">
-                                <label for="toggleDecadeSlider"></label>
-                            </span>
-                            </div>
-                        </div>
-                            <button class="myCustomSkipButton" id="lastDecade" ><i class="fa fa-backward" disabled="false"></i></button>
-                            <input id="decadeSlider" type="text" class="span2" value="" data-slider-min="1900" data-slider-max="2019" data-slider-step="10" data-slider-value="[1900,1909]"/>
-                            <button class="myCustomSkipButton" id="nextDecade" ><i class="fa fa-forward" disabled="false"></i></button>
-                            <div class="h6 float-right top" id="cardShowDecadeFloodCount">0 Floods</div>
-                    </div>
-                </div>
-
-                <!-- FLOOD COUNT SLIDER CARD -->
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <div class="card-title h5 pb-4">
-                            <span id="titleFilter">Communities with __ Floods</span>
-                            <div class="form-group float-right top">
-                            <span class="switch switch-sm">
-                                <input type="checkbox" class="switch" id="toggleFilterSlider">
-                                <label for="toggleFilterSlider"></label>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="pl-2">
-                            <input id="rangeFilter" type="text" class="span2" value="" data-slider-min="0" data-slider-max="40" data-slider-step="1" data-slider-value="[0,40]"/>
-                            <div class="h6 float-right top" id="cardShowRangeFilterCount">0 Communities</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- COMMUNITY DESCRIPTION CARD -->
-                <div class="card"  id="infoPanel">
-                    <div class="card-body">
-                        <div class="card-title h5">Community Overview</div>
-                        <div class="p-1" id="city">Click a community for more information.</div>
-                        <div class="p-1 blue-text" id="shed"></div>
-                        <div class="p-1 scroll-box" id="desc"></div>
-                        <div id="canvasHolder">
-                            <canvas id="barChart" class=""></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- MAP CARD -->
-            <div class="col-lg-8 mt-0 mt-lg-l">
-                <div class="card" id="mapCard">
-                    <div class="card-img rounded" id="map"></div>
+            <div class="col">
+                <div class="card p-1" id="mainCard">
+                    <div class="card-img text-center rounded" id="mainCardMap"></div>
                 </div>
             </div>
 
@@ -186,6 +105,11 @@
 
 <!--Jquery-->
 <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+<!-- D3 -->
+<script type="text/javascript" src="lib/d3.js"></script>
+<!-- TopoJSON and TopoJSON Client -->
+<script type="text/javascript" src="lib/topojson.js"></script>
+<script type="text/javascript" src="lib/topojson-client.js"></script>
 <!--bootstap 4 scripts-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
