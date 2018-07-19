@@ -13,24 +13,26 @@ html, body {
     width: 100%;
 }
 
-/*MAP*/
-
 #mainCardMap {
-    height: 80vh;
+    height: 84vh;
+}
+
+#controlCardContent {
+    height: 84vh;
+}
+
+#coordVizCardContent {
+    height: 84vh;
 }
 
 .map{
     /*border: solid #999;*/
 }
 
-.leaflet-popup-content p {
-    margin: 0.2em 0;
-}
-
 .blockGroups {
     fill: #afafaf;
     stroke: #404040;
-    stroke-width: 2px;
+    stroke-width: 1px;
 }
 
 .california {
@@ -42,7 +44,7 @@ html, body {
 .frame {
     fill: #af011f;
     stroke: #af011f;
-    stroke-width: 10px;
+    stroke-width: 3px;
 }
 
 /*TEMPORAL LEGEND*/

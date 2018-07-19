@@ -23,7 +23,7 @@
 <!-- Navbar -->
 <header>
     <nav	class="navbar bg-dark navbar-dark navbar-expand-sm mb-0 fixed-top z-depth-1 ">
-        <div class="container ">
+        <div class="container-fluid mx-2">
             <a class="navbar-brand animated zoom" href="http://thecarney.github.io"><img class="figure-img mb-0 mr-0 " src="img/logo_white_minimal.svg" alt="logo " width="30px "/></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myTogglerNav"><span class="navbar-toggler-icon"></span></button>
 
@@ -70,13 +70,37 @@
     </div>
 
     <!-- MAP PAGE -->
-    <div class="container p-4 mb-3 mt-5 fadeIn" id="mainContainer">
+    <div class="container-fluid p-4 mb-3 mt-5 fadeIn" id="mainContainer">
         <div class="row" id="rowParent">
 
+            <!-- CONTROL PANEL -->
+            <div class="col-2">
+                <div class="card p-1" id="controlCard">
+                    <div class="" id="controlCardContent">
+                        <div class="h4 pl-2 pt-2">Livermore, California</div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
             <!-- MAP CARD -->
-            <div class="col">
+            <div class="col-6">
                 <div class="card p-1" id="mainCard">
                     <div class="card-img text-center rounded" id="mainCardMap"></div>
+                </div>
+            </div>
+
+            <!-- COORDINATED VIZ CARD -->
+            <div class="col-4">
+                <div class="card p-1" id="coordVizCard">
+                    <div class="" id="coordVizCardContent">
+                        <div class="h4 pl-2 pt-2">Chart 1 Title</div>
+
+
+
+                    </div>
                 </div>
             </div>
 
@@ -110,6 +134,8 @@
 <!-- TopoJSON and TopoJSON Client -->
 <script type="text/javascript" src="lib/topojson.js"></script>
 <script type="text/javascript" src="lib/topojson-client.js"></script>
+<!-- Simple Statistics -->
+<script type="text/javascript" src="lib/simple-statistics.min.js"></script>
 <!--bootstap 4 scripts-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
