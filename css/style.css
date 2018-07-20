@@ -17,12 +17,11 @@ html, body {
     height: 84vh;
 }
 
-#controlCardContent {
-    height: 84vh;
+#infoCardContent {
 }
 
 #coordVizCardContent {
-    height: 84vh;
+    height: 36vh;
 }
 
 .map{
@@ -46,6 +45,29 @@ html, body {
     stroke: #af011f;
     stroke-width: 3px;
 }
+
+.axis path,
+ .axis line {
+     fill: none;
+     stroke: #848484;
+     stroke-width: 1px;
+     shape-rendering: crispEdges;
+ }
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 0.8em;
+    fill: #6e6e6e;
+}
+
+
+
+
+
+
+
+
+
 
 /*TEMPORAL LEGEND*/
 .legend-control-container {

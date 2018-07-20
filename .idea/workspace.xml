@@ -21,8 +21,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="81" lean-forward="true" selection-start-line="81" selection-end-line="81" />
+            <state relative-caret-position="419">
+              <caret line="144" column="72" lean-forward="true" selection-start-line="144" selection-start-column="53" selection-end-line="144" selection-end-column="72" />
               <folding>
                 <element signature="n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" />
               </folding>
@@ -33,13 +33,10 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="339">
+              <caret line="317" column="39" lean-forward="true" selection-start-line="317" selection-start-column="39" selection-end-line="317" selection-end-column="39" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
-                <element signature="n#!!block;n#loadData#0;n#!!block;n#main#0" />
-                <element signature="n#!!block;n#drawFeatures#0" />
-                <element signature="n#!!block;n#makeColorScale#0" />
               </folding>
             </state>
           </provider>
@@ -48,8 +45,8 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+            <state relative-caret-position="355">
+              <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -59,6 +56,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>attrArray</find>
+      <find>transl</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -158,18 +156,18 @@
       <option name="presentableId" value="Default" />
       <updated>1531685220527</updated>
       <workItem from="1531685221656" duration="12188000" />
-      <workItem from="1531800672942" duration="56092000" />
+      <workItem from="1531800672942" duration="80174000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="68280000" />
+    <option name="totallyTimeSpent" value="92362000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1186" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20758693" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2081138" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
@@ -215,7 +213,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -235,9 +233,6 @@
           <caret line="46" column="33" lean-forward="true" selection-start-line="46" selection-start-column="33" selection-end-line="46" selection-end-column="33" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#loadData#0;n#!!block;n#main#0" />
-            <element signature="n#!!block;n#drawFeatures#0" />
-            <element signature="n#!!block;n#makeColorScale#0" />
           </folding>
         </state>
       </provider>
@@ -279,15 +274,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+        <state relative-caret-position="355">
+          <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="81" lean-forward="true" selection-start-line="81" selection-end-line="81" />
+        <state relative-caret-position="419">
+          <caret line="144" column="72" lean-forward="true" selection-start-line="144" selection-start-column="53" selection-end-line="144" selection-end-column="72" />
           <folding>
             <element signature="n#div#0;n#main#0;n#body#0;n#html#0;n#!!top" />
           </folding>
@@ -296,13 +291,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="339">
+          <caret line="317" column="39" lean-forward="true" selection-start-line="317" selection-start-column="39" selection-end-line="317" selection-end-column="39" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="n#!!block;n#loadData#0;n#!!block;n#main#0" />
-            <element signature="n#!!block;n#drawFeatures#0" />
-            <element signature="n#!!block;n#makeColorScale#0" />
           </folding>
         </state>
       </provider>
