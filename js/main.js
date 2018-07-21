@@ -7,9 +7,6 @@ $(document).ready(initialize);
 function initialize() {
     //$("#splashModal").modal('show');
     main();
-
-    // for testing, to load alternate scripts
-    //getExternal();
 }
 
 // Main function uses async/await
@@ -17,7 +14,7 @@ function main() {
     // globals
     var attrArray = ["pctWhite", "pctMinority", "pctUnder30Min", "pct30to60Min", "pctOver60Min",
         "pctBachelorsOrHigher", "pctInPoverty", "perCapitaIncome", "pctRentalRate"];
-    var expressed = attrArray[2];
+    var expressed = attrArray[0];
 
     // load data
     loadData();
@@ -29,8 +26,8 @@ function main() {
             try {
                 drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia,
                     featuresCalifornia, featuresFrame, expressed, map, colorScale);
-
-                setChart(dataTable, colorScale);
+                d3.select(".chart").remove();
+                setChart(dataTable, colorScale, 0);
             } catch(e) {
                 //pass
             }
@@ -40,6 +37,7 @@ function main() {
         $('input[name=groupRadioVariables]').click(function(){
             // get the new radio and set global vars
             let radioName = $('input[name=groupRadioVariables]:checked').attr('id');
+
             // set new expressed var
             switch (radioName) {
                 case "radio1":
@@ -84,11 +82,8 @@ function main() {
             try {
                 // color scale
                 let colorScale = makeColorScale(dataTable, expressed);
-
-                drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia,
-                    featuresCalifornia, featuresFrame, expressed, map, colorScale);
-
-                setChart(dataTable, colorScale);
+                updateDrawFeatures(dataTable, expressed, colorScale);
+                setChart(dataTable, colorScale, 1);
             } catch(e) {
                 //pass
             }
@@ -107,6 +102,7 @@ function main() {
         let featCollBlockGroups = topojson
             .feature(topologyBlockGroups, topologyBlockGroups.objects.LivermoreBlockGroups_4326);
         let featuresBlockGroups = featCollBlockGroups.features;
+
         // for inset map
         let featCollCalifornia = topojson
             .feature(topologyCalifornia, topologyCalifornia.objects.California);
@@ -131,7 +127,7 @@ function main() {
             }
         }
 
-        // make main viz container
+        // make main map container
         let map = d3.select("#mainCardMap")
             .append("svg")
             .attr("class", "map")
@@ -146,8 +142,8 @@ function main() {
         drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia, featuresCalifornia,
              featuresFrame, expressed, map, colorScale);
 
-        // add coord viz
-        setChart(dataTable, colorScale);
+        // make corresponding chart
+        setChart(dataTable, colorScale, 0);
     }
 
     // draws features, including on resize
@@ -169,11 +165,28 @@ function main() {
             .append("path")
             .attr("d", geoPath1)
             .attr("class", function(d){
-                return "blockGroups " + d.properties.GEOID_Data;
+                return "blockGroups bg" + d.properties.GEOID_Data;
             })
             .style("fill", function(d){
                 return choropleth(d.properties, colorScale);
-            });
+            })
+            .on("mouseover", function(d){
+                map.selectAll("path").filter(".blockGroups")
+                    .sort(function (a){
+                        if (a != d) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                });
+                highlight(d.properties, "GEOID_Data");
+                setLabel(d.properties, "GEOID_Data");
+            })
+            .on("mouseout", function(d){
+                highlight(d.properties, "GEOID_Data");
+                d3.selectAll(".infoLabel").remove();
+            })
+            .on("mousemove", moveLabel);
 
         // inset base
         let w2 = 50;
@@ -197,10 +210,17 @@ function main() {
             .attr("transform", "translate(5,"+t+")");
     }
 
+    function updateDrawFeatures(dataTable, expressed, colorScale){
+        let updateBlockGroups = d3.selectAll(".blockGroups")
+            .transition()
+            .duration(2000)
+            .style("fill", function(d){
+                return choropleth(d.properties, colorScale)
+            });
+    }
+
     // create coord viz chart
-    function setChart(dataTable, colorScale){
-        // clear old
-        d3.select(".chart").remove();
+    function setChart(dataTable, colorScale, callType){
 
         // widths
         let leftPad = 25;
@@ -210,72 +230,175 @@ function main() {
         let h1 = parseInt(d3.select("#coordVizCardContent").style('height'));
         let h2 = parseInt(d3.select("#coordVizCardContent").style('height'))-botPad;
 
-        // one attribute is in dollars, so have to change domains
+        // calculate range/domains
         let domainBarMin = 0;
         let domainBarMax = 1;
         let domainYAxisMin = 0;
         let domainYAxisMax = 100;
-        if (expressed == "perCapitaIncome") {
+        if (expressed == "perCapitaIncome") { // one attribute is in dollars, so have to change domains
             dataTable.forEach(function(d){
                 d[expressed] = parseFloat(d[expressed]);
             });
             domainBarMax = Math.ceil(d3.max(dataTable, function(d){return d[expressed]})/10000)*10000;
             domainYAxisMax = domainBarMax/1000;
-            console.log(domainBarMax);
-            console.log(domainYAxisMax);
         } else {
             domainBarMin = 0;
             domainBarMax = 1;
             domainYAxisMin = 0;
             domainYAxisMax = 100;
         }
-
-        // chart container
-        let chart = d3.select("#coordVizCardContent")
-            .append("svg")
-            .attr("width", w1)
-            .attr("height", h1)
-            .attr("class", "chart")
-            .append("g");
-
-        // vertical scale
-        let yScale = d3.scaleLinear()
-            .range([0, (h2)])
-            .domain([domainBarMin,domainBarMax]);
-
-        // bars
-        let bars = chart.selectAll(".bars")
-            .data(dataTable)
-            .enter()
-            .append("rect")
-            .sort(function(a,b){
-                return b[expressed]-a[expressed];
-            })
-            .attr("class", function(d){
-                return "bars " + d.GEOID;
-            })
-            .attr("width", w2 / dataTable.length -1)
-            .attr("x", function(d, i){
-                return i * (w2 / dataTable.length) + leftPad+2;
-            })
-            .attr("height", function(d){
-                return yScale(parseFloat(d[expressed]));
-            })
-            .attr("y", function(d){
-                return (h2) - yScale(parseFloat(d[expressed])) + botPad/2;
-            })
-            .style("fill", function(d){
-                return choropleth(d, colorScale);
-            });
-
         // y axis
         let yAxis = d3.scaleLinear().range([h2, 0]).domain([domainYAxisMin,domainYAxisMax]);
 
-        chart.append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate("+leftPad+","+botPad/2+")")
-            .call(d3.axisLeft(yAxis));
+        // y axis scale
+        let yScale = d3.scaleLinear().range([0, (h2)]).domain([domainBarMin,domainBarMax]);
+
+        // declare vars for init/update calls
+        let bars;
+        let updateBars;
+        let chart;
+        let updateChart;
+
+        // process at init or update call
+        if (callType == 1) {
+            // update
+            updateBars = d3.selectAll(".bars")
+                .sort(function(a,b){
+                    return b[expressed] - a[expressed];
+                })
+                .transition()
+                .delay(function(d, i){
+                    return i *20;
+                })
+                .duration(5)
+                .attr("x", function(d, i){
+                    return i * (w2 / dataTable.length) + leftPad+2;
+                })
+                .attr("height", function(d){
+                    return yScale(parseFloat(d[expressed]));
+                })
+                .attr("y", function(d){
+                    return (h2) - yScale(parseFloat(d[expressed])) + botPad/2;
+                })
+                .style("fill", function(d){
+                    return choropleth(d, colorScale);
+                });
+            // update axis
+            d3.selectAll(".axis")
+                .attr("transform", "translate("+leftPad+","+botPad/2+")")
+                .call(d3.axisLeft(yAxis));
+        } else {
+            // init
+
+            // chart container
+            chart = d3.select("#coordVizCardContent")
+                .append("svg")
+                .attr("width", w1)
+                .attr("height", h1)
+                .attr("class", "chart")
+                .append("g");
+
+            // bars
+            bars = chart.selectAll(".bars")
+                .data(dataTable)
+                .enter()
+                .append("rect")
+                .sort(function(a,b){
+                    return b[expressed]-a[expressed];
+                })
+                .attr("class", function(d){
+                    return "bars bg" + d.GEOID;
+                })
+                .attr("width", w2 / dataTable.length -1)
+                .attr("x", function(d, i){
+                    return i * (w2 / dataTable.length) + leftPad+2;
+                })
+                .attr("height", function(d){
+                    return yScale(parseFloat(d[expressed]));
+                })
+                .attr("y", function(d){
+                    return (h2) - yScale(parseFloat(d[expressed])) + botPad/2;
+                })
+                .style("fill", function(d){
+                    return choropleth(d, colorScale);
+                })
+                //.on("mouseover", highlight)
+                .on("mouseover", function(d) {
+                    let map = d3.select("#mainCardMap");
+                    let idDataTable = d.GEOID;
+                    d3.select("#mainCardMap").selectAll("path").filter(".blockGroups")
+                        .sort(function (a) {
+                            let idBlockGroup = a.properties.GEOID_Data;
+                            if (idBlockGroup != idDataTable) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        });
+                    highlight(d,"GEOID");
+                    setLabel(d, "GEOID");
+                })
+                .on("mouseout", function(d){
+                    highlight(d, "GEOID");
+                    d3.selectAll(".infoLabel").remove();
+                })
+                .on("mousemove", moveLabel);
+
+            // axis
+            chart.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate("+leftPad+","+botPad/2+")")
+                .call(d3.axisLeft(yAxis));
+        }
     }
+
+    // highlight on mouseover
+    function highlight(props, fieldName){
+        //change stroke
+        let selected = d3.selectAll(".bg"+props[fieldName]);
+        selected.classed("highlight", !selected.classed("highlight"));
+    }
+
+    // tooltips
+    function setLabel(props, fieldName){
+        // content
+        let labelAttribute = "<h3>" + props[expressed] + "</h3><b>" + expressed + "</b>";
+
+        // div
+        let infoLabel = d3.select("body")
+            .append("div")
+            .attr("class", "infoLabel")
+            .attr("id", props[fieldName] + "_label")
+            .html(labelAttribute);
+
+        let bgName = infoLabel.append("div")
+            .attr("class", "labelName")
+            .html(props[fieldName]);
+
+    }
+
+    // mouse movements
+    function moveLabel(){
+        // label width
+        let labelWidth = d3.select(".infoLabel")
+            .node()
+            .getBoundingClientRect()
+            .width;
+
+        // mouse coords
+        let x1 = d3.event.clientX +10;
+        let y1 = d3.event.clientY -75;
+        let x2 = d3.event.clientX - labelWidth -10;
+        let y2 = d3.event.clientY +25;
+
+        let x = d3.event.clientX > window.innerWidth - labelWidth - 20 ? x2: x1;
+        let y = d3.event.clientY < 150 ? y2 : y1;
+
+        d3.select(".infoLabel")
+            .style("left", x + "px")
+            .style("top", y + "px");
+    }
+
 
     // color scale getter
     function makeColorScale(dataTable, expressed){

@@ -60,7 +60,31 @@ html, body {
     fill: #6e6e6e;
 }
 
+.highlight {
+    stroke: #fffe11;
+    stroke-width: 3px;
 
+}
+
+.infoLabel {
+    position: absolute;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.76);
+    padding: 5px;
+    border-radius: 5px;
+    top: -75px;
+    pointer-events: none;
+}
+
+.infoLabel h1 {
+    margin: 0 20px 0 0;
+    padding: 5px;
+    display: inline-block;
+    line-height: 1em;
+    background-color: #000;
+    border-radius: 5px;
+
+}
 
 
 
