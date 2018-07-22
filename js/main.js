@@ -5,7 +5,7 @@ $(document).ready(initialize);
 
 // starting point for script
 function initialize() {
-    //$("#splashModal").modal('show');
+    $("#splashModal").modal('show');
     main();
 }
 
@@ -298,7 +298,7 @@ function main() {
         let leftPad = 25;
         let botPad = 20;
         let w1 = parseInt(d3.select("#coordVizCardContent").style('width'));
-        let w2 = parseInt(d3.select("#coordVizCardContent").style('width'))-leftPad;
+        let w2 = parseInt(d3.select("#coordVizCardContent").style('width'))-leftPad-5;
         let h1 = parseInt(d3.select("#coordVizCardContent").style('height'));
         let h2 = parseInt(d3.select("#coordVizCardContent").style('height'))-botPad;
 
