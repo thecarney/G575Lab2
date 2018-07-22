@@ -2,7 +2,7 @@
 
 body{
     background:lightgray;
-    padding-top: 50px;
+    padding-top: 70px;
     padding-bottom: 150px;
 }
 .bg-carney-grey {
@@ -14,30 +14,62 @@ html, body {
 }
 
 #mainCardMap {
-    height: 84vh;
+    height: 80vh;
 }
 
+
+
 #infoCardContent {
+    height: auto;
 }
 
 #coordVizCardContent {
-    height: 36vh;
+    height: 30vh;
+}
+
+@media only screen and (max-width : 480px) {
+    /* only size 'xs' and below */
+    #mainCardMap {
+        height: 30vh;
+    }
+    #coordVizCardContent {
+        height: 20vh;
+    }
 }
 
 .map{
     /*border: solid #999;*/
+    border-radius: 5px;
 }
 
 .blockGroups {
-    fill: #afafaf;
+    fill: rgb(255, 255, 255);
     stroke: #404040;
     stroke-width: 1px;
+}
+
+.blockGroupsStroke {
+    fill: rgba(255, 255, 255, 0);
+    stroke: #000000;
+    stroke-width: 1px;
+}
+
+.basemap {
+    fill: rgb(71, 77, 83);
+    stroke: rgb(77, 77, 83);
+    stroke-width: 0.1px;
 }
 
 .california {
     fill: #afafaf;
     stroke: #404040;
     stroke-width: 1px;
+}
+
+.californiaShadow {
+    fill: rgba(255, 255, 255, 0);
+    stroke: rgb(255, 255, 255);
+    stroke-width: 70px;
 }
 
 .frame {
@@ -86,6 +118,24 @@ html, body {
 
 }
 
+.card {
+    max-width: 100%;
+}
+.card-text {
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.card-block {
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.scale{
+    fill: #cdcdcd;
+    stroke: rgb(185, 185, 185);
+    stroke-width: .5px;
+}
 
 
 

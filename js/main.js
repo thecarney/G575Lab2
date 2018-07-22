@@ -25,7 +25,7 @@ function main() {
         $(window).resize(function(){
             try {
                 drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia,
-                    featuresCalifornia, featuresFrame, expressed, map, colorScale);
+                    featuresCalifornia, featuresFrame, featuresBasemap, expressed, map, colorScale, featuresScale);
                 d3.select(".chart").remove();
                 setChart(dataTable, colorScale, 0);
             } catch(e) {
@@ -96,12 +96,24 @@ function main() {
         let topologyBlockGroups = await d3.json("data/LivermoreBlockGroups.topojson");
         let topologyCalifornia = await d3.json("data/California.topojson");
         let topologyFrame = await d3.json("data/Inset.topojson");
+        let topologyBasemap = await d3.json("data/Parcel.topojson");
+        let topologyScale = await d3.json("data/Scale.topojson");
 
         // get feature collections and features if needed
         // block groups for viz
         let featCollBlockGroups = topojson
             .feature(topologyBlockGroups, topologyBlockGroups.objects.LivermoreBlockGroups_4326);
         let featuresBlockGroups = featCollBlockGroups.features;
+
+        // basemap
+        let featCollBasemap = topojson
+            .feature(topologyBasemap, topologyBasemap.objects.Invert1);
+        let featuresBasemap = featCollBasemap.features;
+
+        // scale
+        let featCollScale = topojson
+            .feature(topologyScale, topologyScale.objects.Scale);
+        let featuresScale = featCollScale.features;
 
         // for inset map
         let featCollCalifornia = topojson
@@ -140,7 +152,7 @@ function main() {
 
         // make map
         drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia, featuresCalifornia,
-             featuresFrame, expressed, map, colorScale);
+             featuresFrame, featuresBasemap, expressed, map, colorScale, featuresScale);
 
         // make corresponding chart
         setChart(dataTable, colorScale, 0);
@@ -148,7 +160,7 @@ function main() {
 
     // draws features, including on resize
     function drawFeatures(dataTable, featCollBlockGroups, featuresBlockGroups, featCollCalifornia,
-                          featuresCalifornia, featuresFrame, expressed, map, colorScale) {
+                          featuresCalifornia, featuresFrame, featuresBasemap, expressed, map, colorScale, featuresScale) {
         // block groups
         let w1 = parseInt(d3.select("#mainCardMap").style('width'));
         let h1 = parseInt(d3.select("#mainCardMap").style('height'));
@@ -158,7 +170,7 @@ function main() {
         // clear old
         d3.select(".map").select("g").selectAll("path").remove();
 
-        // draw again
+        // draw block groups FILLED
         let blockGroups = map.selectAll(".blockGroups")
             .data(featuresBlockGroups)
             .enter()
@@ -170,15 +182,56 @@ function main() {
             .style("fill", function(d){
                 return choropleth(d.properties, colorScale);
             })
+            .style("fill-opacity", 0.75)
+            .style("stroke-opacity", 0);
+            // .on("mouseover", function(d){
+            //     map.selectAll("path").filter(".blockGroups")
+            //         .sort(function (a){
+            //             if (a != d) {
+            //                 return -1;
+            //             } else {
+            //                 return 1;
+            //             }
+            //     });
+            //     highlight(d.properties, "GEOID_Data");
+            //     setLabel(d.properties, "GEOID_Data");
+            // })
+            // .on("mouseout", function(d){
+            //     highlight(d.properties, "GEOID_Data");
+            //     d3.selectAll(".infoLabel").remove();
+            // })
+            // .on("mousemove", moveLabel);
+
+        // draw basemap
+        let basemap = map.selectAll(".basemap")
+            .data(featuresBasemap)
+            .enter()
+            .append("path")
+            .attr("d", geoPath1)
+            .attr("class", function(d) {
+                return "basemap bm" + d.properties.Id;
+            });
+
+        // draw block groups STROKE ONLY
+        let blockGroupsStroke = map.selectAll(".blockGroupsStroke")
+            .data(featuresBlockGroups)
+            .enter()
+            .append("path")
+            .attr("d", geoPath1)
+            .attr("class", function(d){
+                return "blockGroupsStroke bg" + d.properties.GEOID_Data;
+            })
+            .style("fill-opacity", 0)
+            .style("stroke-opacity", 1)
             .on("mouseover", function(d){
-                map.selectAll("path").filter(".blockGroups")
+                map.selectAll("path").filter(".blockGroupsStroke")
                     .sort(function (a){
                         if (a != d) {
                             return -1;
                         } else {
                             return 1;
                         }
-                });
+                    });
                 highlight(d.properties, "GEOID_Data");
                 setLabel(d.properties, "GEOID_Data");
             })
@@ -188,12 +241,29 @@ function main() {
             })
             .on("mousemove", moveLabel);
 
+        //scale
+        let scale = map.selectAll(".scale")
+            .data(featuresScale)
+            .enter()
+            .append("path")
+            .attr("d", geoPath1)
+            .attr("class", function(d) {
+                return "scale s" + d.properties.FID;
+            });
+
         // inset base
         let w2 = 50;
         let h2 = 100;
         let t = h1-h2;
         let proj2 = d3.geoAlbersUsa().scale(1).fitExtent([[1, 1], [w2, h2]], featCollCalifornia);
         let geoPath2 = d3.geoPath().projection(proj2);
+        let californiaShadow = map.selectAll(".californiaShadow")
+            .data(featuresCalifornia)
+            .enter()
+            .append("path")
+            .attr("d", geoPath2)
+            .attr("class","californiaShadow")
+            .attr("transform", "translate(5,"+t+")");
         let california = map.selectAll(".california")
             .data(featuresCalifornia)
             .enter()
@@ -216,7 +286,9 @@ function main() {
             .duration(2000)
             .style("fill", function(d){
                 return choropleth(d.properties, colorScale)
-            });
+            })
+            .style("fill-opacity", 0.75)
+            .style("stroke-opacity", 0);
     }
 
     // create coord viz chart
@@ -257,7 +329,6 @@ function main() {
         let bars;
         let updateBars;
         let chart;
-        let updateChart;
 
         // process at init or update call
         if (callType == 1) {
@@ -282,7 +353,8 @@ function main() {
                 })
                 .style("fill", function(d){
                     return choropleth(d, colorScale);
-                });
+                })
+                .style("opacity", 0.75);
             // update axis
             d3.selectAll(".axis")
                 .attr("transform", "translate("+leftPad+","+botPad/2+")")
@@ -322,11 +394,12 @@ function main() {
                 .style("fill", function(d){
                     return choropleth(d, colorScale);
                 })
+                .style("opacity", 0.75)
                 //.on("mouseover", highlight)
                 .on("mouseover", function(d) {
                     let map = d3.select("#mainCardMap");
                     let idDataTable = d.GEOID;
-                    d3.select("#mainCardMap").selectAll("path").filter(".blockGroups")
+                    d3.select("#mainCardMap").selectAll("path").filter(".blockGroupsStroke")
                         .sort(function (a) {
                             let idBlockGroup = a.properties.GEOID_Data;
                             if (idBlockGroup != idDataTable) {
@@ -362,7 +435,55 @@ function main() {
     // tooltips
     function setLabel(props, fieldName){
         // content
-        let labelAttribute = "<h3>" + props[expressed] + "</h3><b>" + expressed + "</b>";
+        let varName;
+        let varValue;
+        switch (expressed) {
+            case "pctWhite":
+                varName = "White";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pctMinority":
+                varName = "Minority";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pctUnder30Min":
+                varName = "<30min";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pct30to60Min":
+                varName = "30-60min";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pctOver60Min":
+                varName = ">60min";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pctBachelorsOrHigher":
+                varName = "Bachelors(+)";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "pctInPoverty":
+                varName = "Poverty";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+            case "perCapitaIncome":
+                varName = "per capita income";
+                if(props[expressed] == 0) {
+                    varValue = "$0"
+                } else {
+                    varValue = "$"+ props[expressed].toString().substring(0,2)+","+props[expressed].toString().substring(2,5);
+                }
+
+                break;
+            case "pctRentalRate":
+                varName = "renters";
+                varValue = parseInt(props[expressed]*100)+"%";
+                break;
+        }
+
+
+
+        let labelAttribute = "<h3>" + varValue + "</h3><b>" + varName + "</b>";
 
         // div
         let infoLabel = d3.select("body")
@@ -373,7 +494,7 @@ function main() {
 
         let bgName = infoLabel.append("div")
             .attr("class", "labelName")
-            .html(props[fieldName]);
+            .html("");
 
     }
 
@@ -398,7 +519,6 @@ function main() {
             .style("left", x + "px")
             .style("top", y + "px");
     }
-
 
     // color scale getter
     function makeColorScale(dataTable, expressed){
